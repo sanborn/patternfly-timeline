@@ -1,11 +1,14 @@
 {
   "name": "patternfly-timeline",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A time based / event series interactive visualization using d3.js. Use drag and zoom to navigate in time.",
   "main": "dist/timeline.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/patternfly/patternfly-timeline"
+    "url": "https://github.com/sanborn/patternfly-timeline"
+  },
+  "engines": {
+    "node": "<8.0.0"
   },
   "dependencies": {
     "d3": "~3.5.17",
@@ -40,9 +43,9 @@
     "webpack-dev-server": "1.11.0"
   },
   "bugs": {
-    "url": "https://github.com/cshinn/patternfly-timeline/issues"
+    "url": "https://github.com/sanborn/patternfly-timeline/issues"
   },
-  "homepage": "https://github.com/cshinn/patternfly-timeline",
+  "homepage": "https://github.com/sanborn/patternfly-timeline",
   "directories": {
     "example": "example",
     "test": "test"
@@ -52,6 +55,6 @@
     "build": "webpack -p --optimize-minimize --optimize-occurence-order --optimize-dedupe --progress --devtool source-map",
     "start": "webpack-dev-server --colors --inline --devtool source-map --host=0.0.0.0"
   },
-  "author": "Chris Shinn <cshinn@redhat.com> (https://github.com/cshinn)",
+  "author": "David Beers <dbeers@sanborn.com>, Chris Shinn <cshinn@redhat.com> (https://github.com/cshinn)",
   "license": "MIT"
 }
