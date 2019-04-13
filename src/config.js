@@ -54,18 +54,18 @@ const config = {
       return '\uf111';
     }
   },
-  eventPopover: (d) => {
-    var popover = '';
-    if(d.hasOwnProperty("events")) {
-      popover = `Group of ${d.events.length} events`
-    } else {
-      for (var i in d.details) {
-        popover = popover + i.charAt(0).toUpperCase() + i.slice(1) + ': ' + d.details[i] + '<br>';
-      }
-      popover = popover + 'Date: ' + d.date;
-    }
-    return popover;
-  },
+  // eventPopover: (d) => {
+  //   var popover = '';
+  //   if(d.hasOwnProperty("events")) {
+  //     popover = `Group of ${d.events.length} events`
+  //   } else {
+  //     for (var i in d.details) {
+  //       popover = popover + i.charAt(0).toUpperCase() + i.slice(1) + ': ' + d.details[i] + '<br>';
+  //     }
+  //     popover = popover + 'Date: ' + d.date;
+  //   }
+  //   return popover;
+  // },
   marker: true,
   context: true,
   slider: true,
