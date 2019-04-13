@@ -20,4 +20,7 @@ module.exports = {
     d3: 'd3',
   },
   plugins: require('./webpack/plugins')(PRODUCTION),
+  devServer: {
+    hotOnly: true
+  }
 };
