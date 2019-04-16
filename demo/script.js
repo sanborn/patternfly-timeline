@@ -5,37 +5,32 @@ $(document).ready(function() {
   });
 });
 
-$(document).on('click', '.drop', function () {$(this).popover('show'); });
+// $(document).on('click', '.drop', function () {$(this).popover('show'); });
+//
+// $(document).on('click', '.grid', function () {$('[data-toggle="popover"]').popover('hide');});
 
-$(document).on('click', '.grid', function () {$('[data-toggle="popover"]').popover('hide');});
-
-const ONE_HOUR = 60 * 60 * 1000,
+const ONE_MINUTE = 60 * 1000,
+      ONE_HOUR = 60 * ONE_MINUTE,
       ONE_DAY = 24 * ONE_HOUR,
       ONE_WEEK = 7 * ONE_DAY,
       ONE_MONTH = 30 * ONE_DAY,
       SIX_MONTHS = 6 * ONE_MONTH;
 
-var data = [],
-  start = new Date('2016-04-02T20:14:22.691Z'),
-  today = new Date('2016-05-02T17:59:06.134Z');
-
-for (var x in json) { //json lives in external file for testing
-  data[x] = {};
-  data[x].name = json[x].name;
-  data[x].data = [];
-  for (var y in json[x].data) {
-    data[x].data.push({});
-    data[x].data[y].date = new Date(json[x].data[y].date);
-    data[x].data[y].details = json[x].data[y].details;
-  }
-  $('#timeline-selectpicker').append("<option>" + data[x].name + "</option>");
-  data[x].display = true;
-}
-$('#timeline-selectpicker').selectpicker('selectAll');
+let data = {
+  name: geojson.id,
+  data: _.map(geojson.features, (f) => {
+    return {
+      date: new Date(f.properties.time),
+      details: f
+    }
+  })
+};
+let start = data.data[0].date;
+let end = _.last(data.data).date;
 
 var timeline = d3.chart.timeline()
-  .end(today)
-  .start(today - ONE_WEEK)
+  .end(end)
+  .start(start)
   .minScale(ONE_WEEK / ONE_MONTH)
   .maxScale(ONE_WEEK / ONE_HOUR)
   .eventClick(function(el) {
@@ -54,34 +49,32 @@ var timeline = d3.chart.timeline()
     } else {
       table = table + 'Date: ' + el.date + '<br>';
       for (i in el.details) {
-        table = table + i.charAt(0).toUpperCase() + i.slice(1) + ': ' + el.details[i] + '<br>';
+        table = table + i.charAt(0).toUpperCase() + i.slice(1) + ': ' + JSON.stringify(el.details[i]) + '<br>';
       }
     }
     $('#legend').html(table);
 
   });
-if(countNames(data) <= 0) {
-  timeline.labelWidth(60);
-}
+// if(countNames(data) <= 0) {
+//   timeline.labelWidth(60);
+// }
 
 
 
-var element = d3.select('#pf-timeline').append('div').datum(data.filter(function(eventGroup) {
-  return eventGroup.display === true;
-}));
+var element = d3.select('#pf-timeline').append('div').datum([data]);
 timeline(element);
 
-$('#timeline-selectpicker').on('changed.bs.select', function(event, clickedIndex, newValue, oldValue) {
-  data[clickedIndex].display = !data[clickedIndex].display;
-  element.datum(data.filter(function(eventGroup) {
-    return eventGroup.display === true;
-  }));
-  timeline(element);
-  $('[data-toggle="popover"]').popover({
-    'container': '#pf-timeline',
-    'placement': 'top'
-  });
-});
+// $('#timeline-selectpicker').on('changed.bs.select', function(event, clickedIndex, newValue, oldValue) {
+//   data[clickedIndex].display = !data[clickedIndex].display;
+//   element.datum(data.filter(function(eventGroup) {
+//     return eventGroup.display === true;
+//   }));
+//   timeline(element);
+//   $('[data-toggle="popover"]').popover({
+//     'container': '#pf-timeline',
+//     'placement': 'top'
+//   });
+// });
 
 $(window).on('resize', function() {
   timeline(element);
@@ -92,37 +85,37 @@ $(window).on('resize', function() {
 });
 
 
-$('#datepicker').datepicker({
-  autoclose: true,
-  todayBtn: "linked",
-  todayHighlight: true
-});
+// $('#datepicker').datepicker({
+//   autoclose: true,
+//   todayBtn: "linked",
+//   todayHighlight: true
+// });
+//
+// $('#datepicker').datepicker('setDate', end);
+//
+// $('#datepicker').on('changeDate', zoomFilter);
 
-$('#datepicker').datepicker('setDate', today);
+// $( document.body ).on( 'click', '.dropdown-menu li', function( event ) {
+//   var $target = $( event.currentTarget );
+//     $target.closest( '.dropdown' )
+//       .find( '[data-bind="label"]' ).text( $target.text() )
+//         .end()
+//       .children( '.dropdown-toggle' ).dropdown( 'toggle' );
+//
+//     zoomFilter();
+//
+//     return false;
+//   });
 
-$('#datepicker').on('changeDate', zoomFilter);
-
-$( document.body ).on( 'click', '.dropdown-menu li', function( event ) {
-  var $target = $( event.currentTarget );
-    $target.closest( '.dropdown' )
-      .find( '[data-bind="label"]' ).text( $target.text() )
-        .end()
-      .children( '.dropdown-toggle' ).dropdown( 'toggle' );
-
-    zoomFilter();
-
-    return false;
-  });
-
-function countNames(data) {
-  var count = 0;
-  for (var i = 0; i < data.length; i++) {
-    if (data[i].name !== undefined && data[i].name !=='') {
-      count++;
-    }
-  }
-  return count;
-}
+// function countNames(data) {
+//   var count = 0;
+//   for (var i = 0; i < data.length; i++) {
+//     if (data[i].name !== undefined && data[i].name !=='') {
+//       count++;
+//     }
+//   }
+//   return count;
+// }
 
 function zoomFilter() {
   var range = $('#range-dropdown').find('[data-bind="label"]' ).text(),
