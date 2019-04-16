@@ -15,9 +15,7 @@ export default class zoom {
     this.grid = d3.select('.timeline-pf-grid');
     this.dimensions = dimensions;
     this.scales = scales;
-    this.configuration = configuration;
     this.data = data;
-    this.callback = callback;
     this.sliderScale = d3.scale.log()
         .domain([configuration.minScale, configuration.maxScale])
         .range([configuration.minScale, configuration.maxScale])

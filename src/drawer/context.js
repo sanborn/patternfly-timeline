@@ -9,11 +9,10 @@ export default (svg, scales, dimensions, configuration, data) => {
     .attr('clip-path', 'url(#timeline-pf-context-brush-clipper)')
     .attr("transform", `translate(${configuration.padding.left + configuration.labelWidth},${configuration.padding.top + dimensions.height + 40})`);
 
-  let counts = [];
-  let roundTo = 3600000;//one hour
-  let barWidth = Math.ceil((roundTo / (scales.ctx.domain()[1] - scales.ctx.domain()[0])) * dimensions.width);
+  // let roundTo = 1; // 1ms     //3600000;//one hour
+  let barWidth = 1; // Math.ceil((roundTo / (scales.ctx.domain()[1] - scales.ctx.domain()[0])) * dimensions.width);
 
-  countEvents(data, roundTo, counts);
+  let counts = countEvents(data);
   counts.sort((a,b) => {
     if(a.date < b.date) {
         return -1;
@@ -39,17 +38,25 @@ export default (svg, scales, dimensions, configuration, data) => {
 
 };
 
-function countEvents(data, toRoundTo, counts) {
-  let temp = {};
-  for(let i in data) {
-    for (let j in data[i].data) {
-      let rounded = Math.floor(data[i].data[j].date / toRoundTo) * toRoundTo;
-      temp[rounded] = temp[rounded] + 1 || 1;
-    }
-  }
-  for(let k in temp) {
-    let tempDate = new Date();
-    tempDate.setTime(+k);
-    counts.push({'date': tempDate, 'count': temp[k]});
-  }
-};
+// neuter counts logic so that every point is single: no grouping or stacking (original logic is below for reference)
+function countEvents(data) {
+  // Assumes just one timeline chart. If we want more fix here.
+  return _.map(data[0].data, d => {
+    return { date: d.date, count: 1}
+  })
+}
+
+// function countEvents(data, toRoundTo, counts) {
+//   let temp = {};
+//   for(let i in data) {
+//     for (let j in data[i].data) {
+//       let rounded = Math.floor(data[i].data[j].date / toRoundTo) * toRoundTo;
+//       temp[rounded] = temp[rounded] + 1 || 1;
+//     }
+//   }
+//   for(let k in temp) {
+//     let tempDate = new Date();
+//     tempDate.setTime(+k);
+//     counts.push({'date': tempDate, 'count': temp[k]});
+//   }
+// };
