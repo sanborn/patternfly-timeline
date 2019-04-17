@@ -16,7 +16,7 @@ export default (svg, scales, configuration) => function dropsSelector(data) {
     const shape = drops.enter()
         .append('text')
           .classed('timeline-pf-drop', true)
-          .classed('timeline-pf-event-group', (d) => {return d.hasOwnProperty("events") ? true : false})
+          // .classed('timeline-pf-event-group', (d) => {return d.hasOwnProperty("events") ? true : false})
           .attr('transform', (d) => `translate(${scales.x(d.date)})`)
           .attr('fill', configuration.eventColor)
           .attr('text-anchor', 'middle')

@@ -21,7 +21,8 @@ let data = {
   data: _.map(geojson.features, (f) => {
     return {
       date: new Date(f.properties.time),
-      details: f
+      feature: f,
+      classifier: f.properties.leg % 2 === 0 ? 'even' : 'odd' // used for eventColor config below
     }
   })
 };
@@ -33,6 +34,9 @@ var timeline = d3.chart.timeline()
   .start(start)
   .minScale(ONE_WEEK / ONE_MONTH)
   .maxScale(ONE_WEEK / ONE_HOUR)
+  .eventColor((e) => { // Note: if eventColor is null, eventLineColor is called
+    return  e.classifier === 'even' ? '#0088CE' : '#ec7a08';
+  })
   .eventClick(function(el) {
     var table = '<table class="table table-striped table-bordered">';
     if(el.hasOwnProperty("events")) {
@@ -40,16 +44,16 @@ var timeline = d3.chart.timeline()
       table = table + '<tr><th>Date</th><th>Event</th><th>Object</th></tr>';
       for (var i = 0; i < el.events.length; i++) {
         table = table + '<tr><td>' + el.events[i].date + ' </td> ';
-        for (var j in el.events[i].details) {
-          table = table +'<td> ' + el.events[i].details[j] + ' </td> ';
+        for (var j in el.events[i].feature) {
+          table = table +'<td> ' + el.events[i].feature[j] + ' </td> ';
         }
         table = table + '</tr>';
       }
       table = table + '</tbody>';
     } else {
       table = table + 'Date: ' + el.date + '<br>';
-      for (i in el.details) {
-        table = table + i.charAt(0).toUpperCase() + i.slice(1) + ': ' + JSON.stringify(el.details[i]) + '<br>';
+      for (i in el.feature) {
+        table = table + i.charAt(0).toUpperCase() + i.slice(1) + ': ' + JSON.stringify(el.feature[i]) + '<br>';
       }
     }
     $('#legend').html(table);
