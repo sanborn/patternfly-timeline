@@ -26,8 +26,40 @@ export default (svg, scales, configuration) => function dropsSelector(data) {
           .attr('dominant-baseline', 'central')
           .text(configuration.eventShape);
 
+    let lastShiftSelectedIdx = null;
+    let isMultiSelecting = false;
+
     if (configuration.eventClick) {
-      shape.on('click', configuration.eventClick);
+      shape.on('click', function(d, selectedIdx) {
+        console.log('clicked: ' + selectedIdx);
+        if (configuration.eventShiftClick && d3.event.shiftKey) {
+          if (isMultiSelecting) {
+            // we've made a multiselection.
+            const low = Math.min(selectedIdx, lastShiftSelectedIdx);
+            const high = Math.max(selectedIdx, lastShiftSelectedIdx);
+            const selection = [];
+            // Remove any previous selection
+            d3.selectAll('.timeline-pf-drop').classed('selected', false);
+            d3.selectAll('.timeline-pf-drop').filter((d, i) => {
+              let include = low <= i  && i <= high;
+              if (include) {
+                selection.push(d);
+              }
+              return include;
+            }).classed('selected', true);
+            configuration.eventShiftClick(d, selection);
+            isMultiSelecting = false;
+          } else {
+            isMultiSelecting = true;
+            configuration.eventShiftClick(d);
+          }
+          lastShiftSelectedIdx = selectedIdx;
+        } else { // not a shift-click, just a click
+          isMultiSelecting = false;
+          d3.selectAll('.timeline-pf-drop').classed('selected', false);
+          configuration.eventClick(d)
+        }
+      });
     }
 
     if (configuration.eventHover) {

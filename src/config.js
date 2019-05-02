@@ -32,6 +32,7 @@ const config = {
   eventHover: null,
   eventZoom: null,
   eventClick: null,
+  eventShiftClick: null,
   eventLineColor: (d, i) => {
     switch (i % 5) {
       case 0:
@@ -48,11 +49,12 @@ const config = {
   },
   eventColor: null,
   eventShape: (d) => {
-    if(d.hasOwnProperty("events")) {
-      return '\uf140';
-    } else {
-      return '\uf111';
-    }
+    return '\uf111';
+    // if(d.hasOwnProperty("events")) {
+    //   return '\uf140';
+    // } else {
+    //   return '\uf111';
+    // }
   },
   // eventPopover: (d) => {
   //   var popover = '';

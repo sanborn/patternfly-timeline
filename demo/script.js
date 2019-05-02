@@ -16,13 +16,17 @@ const ONE_MINUTE = 60 * 1000,
       ONE_MONTH = 30 * ONE_DAY,
       SIX_MONTHS = 6 * ONE_MONTH;
 
+function classifierFn(feature) {
+  return feature.properties.leg % 2 === 0 ? 'even' : 'odd';
+}
+
 let data = {
   name: geojson.id,
   data: _.map(geojson.features, (f) => {
     return {
       date: new Date(f.properties.time),
       feature: f,
-      classifier: f.properties.leg % 2 === 0 ? 'even' : 'odd' // used for eventColor config below
+      classifier: classifierFn(f)  // used for eventColor config below
     }
   })
 };
@@ -37,27 +41,37 @@ var timeline = d3.chart.timeline()
   .eventColor((e) => { // Note: if eventColor is null, eventLineColor is called
     return  e.classifier === 'even' ? '#0088CE' : '#ec7a08';
   })
-  .eventClick(function(el) {
+  .eventShape((e) => {
+    return '\u2759';
+  })
+  .eventClick(function(e) {
     var table = '<table class="table table-striped table-bordered">';
-    if(el.hasOwnProperty("events")) {
-      table = table + '<thead>This is a group of ' + el.events.length + ' events starting on '+ el.date + '</thead><tbody>';
-      table = table + '<tr><th>Date</th><th>Event</th><th>Object</th></tr>';
-      for (var i = 0; i < el.events.length; i++) {
-        table = table + '<tr><td>' + el.events[i].date + ' </td> ';
-        for (var j in el.events[i].feature) {
-          table = table +'<td> ' + el.events[i].feature[j] + ' </td> ';
-        }
-        table = table + '</tr>';
+    // if(e.hasOwnProperty("events")) {
+    //   table = table + '<thead>This is a group of ' + e.events.length + ' events starting on '+ e.date + '</thead><tbody>';
+    //   table = table + '<tr><th>Date</th><th>Event</th><th>Object</th></tr>';
+    //   for (var i = 0; i < e.events.length; i++) {
+    //     table = table + '<tr><td>' + e.events[i].date + ' </td> ';
+    //     for (var j in e.events[i].feature) {
+    //       table = table +'<td> ' + e.events[i].feature[j] + ' </td> ';
+    //     }
+    //     table = table + '</tr>';
+    //   }
+    //   table = table + '</tbody>';
+    // } else {
+      table = table + 'Date: ' + e.date + '<br>';
+      for (i in e.feature) {
+        table = table + i.charAt(0).toUpperCase() + i.slice(1) + ': ' + JSON.stringify(e.feature[i]) + '<br>';
       }
-      table = table + '</tbody>';
-    } else {
-      table = table + 'Date: ' + el.date + '<br>';
-      for (i in el.feature) {
-        table = table + i.charAt(0).toUpperCase() + i.slice(1) + ': ' + JSON.stringify(el.feature[i]) + '<br>';
-      }
-    }
+    // }
     $('#legend').html(table);
 
+  })
+  .eventShiftClick((e, selection) => {
+    console.log('e: ' + JSON.stringify(e));
+    console.log('selection: ' + JSON.stringify(selection));
+    if (selection) {
+      console.log('count: ' + selection.length)
+    }
   });
 // if(countNames(data) <= 0) {
 //   timeline.labelWidth(60);
