@@ -51,7 +51,8 @@ export default class zoom {
           .attr('class', 'fa fa-minus')
           .attr('id', 'timeline-pf-zoom-out-icon');
 
-      const zoomSlider = container.append('input')
+      if (configuration.hasZoomSlider) {
+        const zoomSlider = container.append('input')
           .attr('type', 'range')
           .attr('class', 'timeline-pf-zoom timeline-pf-slider')
           .attr('id', 'timeline-pf-slider')
@@ -62,10 +63,11 @@ export default class zoom {
           .attr('step', 0.1)
           .on('input', () => {this.zoomClick()})
           .on('change', () => {this.zoomClick()});
-      zoomSlider
-        .style('top', `${configuration.padding.top + ((dimensions.height - (zoomIn.node().offsetHeight) * 2) / 2) + zoomIn.node().offsetHeight - (zoomSlider.node().offsetHeight / 2)}px`)
-        .style('left', `${configuration.padding.left + configuration.labelWidth + dimensions.width +
-                          configuration.sliderWidth - ((zoomIn.node().offsetWidth - zoomSlider.node().offsetHeight) / 2) - (zoomSlider.node().offsetWidth / 2)}px`);
+        zoomSlider
+          .style('top', `${configuration.padding.top + ((dimensions.height - (zoomIn.node().offsetHeight) * 2) / 2) + zoomIn.node().offsetHeight - (zoomSlider.node().offsetHeight / 2)}px`)
+          .style('left', `${configuration.padding.left + configuration.labelWidth + dimensions.width +
+          configuration.sliderWidth - ((zoomIn.node().offsetWidth - zoomSlider.node().offsetHeight) / 2) - (zoomSlider.node().offsetWidth / 2)}px`);
+      }
     }
 
     if(configuration.context) {
