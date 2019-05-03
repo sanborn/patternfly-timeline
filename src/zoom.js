@@ -5,7 +5,7 @@ export default class zoom {
   constructor() {
   }
 
-  updateZoom(container, dimensions, scales, configuration, data, callback) {
+  updateZoom(container, dimensions, scales, config, data, callback) {
     this.ONE_MINUTE = 60 * 1000;
     this.ONE_HOUR = this.ONE_MINUTE * 60;
     this.ONE_DAY = this.ONE_HOUR * 24;
@@ -17,24 +17,30 @@ export default class zoom {
     this.scales = scales;
     this.data = data;
     this.sliderScale = d3.scale.log()
-        .domain([configuration.minScale, configuration.maxScale])
-        .range([configuration.minScale, configuration.maxScale])
+        .domain([config.minScale, config.maxScale])
+        .range([config.minScale, config.maxScale])
         .base(2);
     this.zoom = d3.behavior.zoom()
         .size([dimensions.width, dimensions.height])
-        .scaleExtent([configuration.minScale, configuration.maxScale])
+        .scaleExtent([config.minScale, config.maxScale])
         .x(scales.x);
     this.brush = null;
 
-    if (configuration.slider) {
+    if (config.hasZoomControl) {
+      const zoomInTop = config.vertical ? config.zoomButtonsTop : config.padding.top;
+      const zoomOutTop = config.vertical ? config.zoomButtonsTop : config.padding.top + dimensions.height - 26;
+      const zoomInLeft = config.vertical ? config.zoomButtonsLeft :
+        config.padding.left + config.labelWidth + dimensions.width + config.sliderWidth;
+      const zoomOutLeft = config.vertical ? config.zoomButtonsLeft + 30 :
+        config.padding.left + config.labelWidth + dimensions.width + config.sliderWidth;
       const zoomIn = container.append('button')
           .attr('type', 'button')
           .attr('class', 'btn btn-default timeline-pf-zoom timeline-pf-zoom-in')
           .attr('id', 'timeline-pf-zoom-in')
-          .style('top', `${configuration.padding.top}px`)
+          .style('top', `${zoomInTop}px`)
           .on('click', () => {this.zoomClick()});
       zoomIn
-        .style('left', `${configuration.padding.left + configuration.labelWidth + dimensions.width + (configuration.sliderWidth - zoomIn.node().offsetWidth)}px`)
+        .style('left', `${zoomInLeft - zoomIn.node().offsetWidth}px`)
         .append('i')
             .attr('class', 'fa fa-plus')
             .attr('id', 'timeline-pf-zoom-in-icon');
@@ -43,34 +49,34 @@ export default class zoom {
           .attr('type', 'button')
           .attr('class', 'btn btn-default timeline-pf-zoom')
           .attr('id', 'timeline-pf-zoom-out')
-          .style('top', `${configuration.padding.top + dimensions.height - 26}px`)
+          .style('top', `${zoomOutTop}px`)
           .on('click', () => {this.zoomClick()});
       zoomOut
-        .style('left', `${configuration.padding.left + configuration.labelWidth + dimensions.width + (configuration.sliderWidth - zoomOut.node().offsetWidth)}px`)
+        .style('left', `${zoomOutLeft - zoomOut.node().offsetWidth}px`)
         .append('i')
           .attr('class', 'fa fa-minus')
           .attr('id', 'timeline-pf-zoom-out-icon');
 
-      if (configuration.hasZoomSlider) {
+      if (config.hasZoomSlider) {
         const zoomSlider = container.append('input')
           .attr('type', 'range')
           .attr('class', 'timeline-pf-zoom timeline-pf-slider')
           .attr('id', 'timeline-pf-slider')
           .style('width', `${dimensions.height - (zoomIn.node().offsetHeight * 2)}px`)
           .attr('value', this.sliderScale(this.zoom.scale()))
-          .attr('min', configuration.minScale)
-          .attr('max', configuration.maxScale)
+          .attr('min', config.minScale)
+          .attr('max', config.maxScale)
           .attr('step', 0.1)
           .on('input', () => {this.zoomClick()})
           .on('change', () => {this.zoomClick()});
         zoomSlider
-          .style('top', `${configuration.padding.top + ((dimensions.height - (zoomIn.node().offsetHeight) * 2) / 2) + zoomIn.node().offsetHeight - (zoomSlider.node().offsetHeight / 2)}px`)
-          .style('left', `${configuration.padding.left + configuration.labelWidth + dimensions.width +
-          configuration.sliderWidth - ((zoomIn.node().offsetWidth - zoomSlider.node().offsetHeight) / 2) - (zoomSlider.node().offsetWidth / 2)}px`);
+          .style('top', `${config.padding.top + ((dimensions.height - (zoomIn.node().offsetHeight) * 2) / 2) + zoomIn.node().offsetHeight - (zoomSlider.node().offsetHeight / 2)}px`)
+          .style('left', `${config.padding.left + config.labelWidth + dimensions.width +
+          config.sliderWidth - ((zoomIn.node().offsetWidth - zoomSlider.node().offsetHeight) / 2) - (zoomSlider.node().offsetWidth / 2)}px`);
       }
     }
 
-    if(configuration.context) {
+    if(config.context) {
       this.brush = d3.svg.brush()
         .x(scales.ctx)
         .extent(scales.x.domain())
@@ -83,16 +89,16 @@ export default class zoom {
     }
 
 
-    if (configuration.eventZoom) {
-      this.zoom.on('zoomend', configuration.eventZoom);
+    if (config.eventZoom) {
+      this.zoom.on('zoomend', config.eventZoom);
     }
 
     this.zoom.on('zoom', () => {
       requestAnimationFrame(() => callback(data));
-      if(configuration.slider) {
+      if(config.slider) {
         container.select('#timeline-pf-slider').property('value', this.sliderScale(this.zoom.scale()));
       }
-      if(configuration.context) {
+      if(config.context) {
         this.brush.extent(this.scales.x.domain());
         container.select('.timeline-pf-brush').call(this.brush);
       }

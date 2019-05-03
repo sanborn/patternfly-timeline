@@ -29,6 +29,11 @@
   stroke: none;
 }
 
+.timeline-pf-x-axis.rotated text {
+  text-anchor: end !important;
+  transform: rotate(-90deg) translate(-8px, -13px);
+}
+
 .timeline-pf-label {
   font-weight: 400;
 }
@@ -55,7 +60,7 @@ text.timeline-pf-event-group {
 .timeline-pf-grid {
   cursor: all-scroll;
   shape-rendering: crispEdges;
-  stroke: #d1d1d1;
+  /*stroke: #d1d1d1;*/
 }
 
 .timeline-pf-graph-body .timeline-pf-line {

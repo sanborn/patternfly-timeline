@@ -31,7 +31,7 @@ function timeline(config = {}) {
       // let ungroupedData = data;
       // data = groupEvents(data, finalConfiguration.eventGrouping);
 
-      finalConfiguration.lineHeight = (data.length <= 3) ? 80 : 40;
+      // finalConfiguration.lineHeight = (data.length <= 3) ? 80 : 40;
       finalConfiguration.contextStart = finalConfiguration.contextStart || d3.min(getDates(data));
       finalConfiguration.contextEnd = finalConfiguration.contextEnd || finalConfiguration.end;
 
@@ -59,7 +59,7 @@ function timeline(config = {}) {
         .classed('timeline-pf-chart', true)
         .attr({
           width: outer_width,
-          height: dimensions.outer_height,
+          height: dimensions.outer_height
         });
       const draw = drawer(svg, dimensions, scales, finalConfiguration).bind(selection);
 
@@ -70,6 +70,15 @@ function timeline(config = {}) {
       }
 
       zoomInstance.updateZoom(d3.select(this), dimensions, scales, finalConfiguration, data, draw);
+
+      if (finalConfiguration.vertical) {
+        const tx = dimensions.outer_height + 80;
+        const ty = dimensions.width / 2;
+        d3.select('.timeline-pf-chart').attr("transform", `rotate(90) translate(${tx}, ${ty})`);
+        $(finalConfiguration.parentSelector)
+          .width(dimensions.outer_height + finalConfiguration.padding.top)
+          .height(finalConfiguration.width);
+      }
 
     });
   }

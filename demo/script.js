@@ -1,9 +1,9 @@
-$(document).ready(function() {
-  $('[data-toggle="popover"]').popover({
-    'container': '#pf-timeline',
-    'placement': 'top'
-  });
-});
+// $(document).ready(function() {
+//   $('[data-toggle="popover"]').popover({
+//     'container': '#pf-timeline',
+//     'placement': 'top'
+//   });
+// });
 
 // $(document).on('click', '.drop', function () {$(this).popover('show'); });
 //
@@ -33,7 +33,23 @@ let data = {
 let start = data.data[0].date;
 let end = _.last(data.data).date;
 
-var timeline = d3.chart.timeline()
+const goVertical = true; // toggle this to show vertical or horizontal timeline
+
+const config = goVertical ? {
+  parentSelector: '#timeline-container',
+  lineHeight: 40, // actually width
+  hasZoomSlider: false,
+  vertical: true,
+  width: 960, // actually height
+  sliderWidth: 15,
+  contextHeight: 40, // actually width
+  zoomButtonsLeft: 141,
+  zoomButtonsTop: 815
+} : { // default config
+  lineHeight: 80
+};
+
+var timeline = d3.chart.timeline(config)
   .end(end)
   .start(start)
   .minScale(ONE_WEEK / ONE_MONTH)
@@ -78,7 +94,9 @@ var timeline = d3.chart.timeline()
 // }
 
 
-
+if (config.vertical) {
+  $('#pf-timeline').addClass('vertical');
+}
 var element = d3.select('#pf-timeline').append('div').datum([data]);
 timeline(element);
 
@@ -96,10 +114,10 @@ timeline(element);
 
 $(window).on('resize', function() {
   timeline(element);
-  $('[data-toggle="popover"]').popover({
-    'container': '#pf-timeline',
-    'placement': 'top'
-  });
+  // $('[data-toggle="popover"]').popover({
+  //   'container': '#pf-timeline',
+  //   'placement': 'top'
+  // });
 });
 
 

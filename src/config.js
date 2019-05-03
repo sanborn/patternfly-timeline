@@ -8,7 +8,6 @@ const config = {
   minScale: 0,
   maxScale: Infinity,
   vertical: false,
-  hasZoomSlider: false,
   width: null,
   padding: {
     top: 30, //must be at least 24 for marker to display properly
@@ -72,7 +71,9 @@ const config = {
   // },
   marker: true,
   context: true,
-  slider: true,
+  hasLabel: true,
+  hasZoomControl: true,
+  hasZoomSlider: true,
   eventGrouping: 60000, //one minute
 };
 

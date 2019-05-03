@@ -7,6 +7,7 @@ export default (axesContainer, scales, configuration, dimensions) => data => {
     selection.enter()
       .append('g')
       .classed('timeline-pf-x-axis', true)
+      .classed('rotated', configuration.vertical)
       .classed(scope, true)
       .call(xAxis(scale, configuration))
       .attr('transform', `translate(0,${scope === 'focus' ? dimensions.height : dimensions.height + dimensions.ctxHeight + 40})`);
