@@ -97,6 +97,10 @@ text.timeline-pf-event-group {
   position:absolute;
 }
 
+.timeline-pf-zoom > i {
+  font-size: 10px;
+}
+
 .timeline-pf-context .timeline-pf-bar {
   fill: #bbbbbb;
   shape-rendering: crispEdges;
