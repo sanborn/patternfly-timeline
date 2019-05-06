@@ -42,7 +42,7 @@ export default class zoom {
       zoomIn
         .style('left', `${zoomInLeft - zoomIn.node().offsetWidth}px`)
         .append('i')
-            .attr('class', 'fa fa-plus')
+            .attr('class', 'fa fa-plus timeline-pf-zoom-icon')
             .attr('id', 'timeline-pf-zoom-in-icon');
 
       const zoomOut = container.append('button')
@@ -54,7 +54,7 @@ export default class zoom {
       zoomOut
         .style('left', `${zoomOutLeft - zoomOut.node().offsetWidth}px`)
         .append('i')
-          .attr('class', 'fa fa-minus')
+          .attr('class', 'fa fa-minus timeline-pf-zoom-icon')
           .attr('id', 'timeline-pf-zoom-out-icon');
 
       if (config.hasZoomSlider) {
