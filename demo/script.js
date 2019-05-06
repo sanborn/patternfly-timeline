@@ -43,8 +43,10 @@ const config = goVertical ? {
   width: 960, // actually height
   sliderWidth: 15,
   contextHeight: 40, // actually width
-  zoomButtonsLeft: 141,
-  zoomButtonsTop: 815
+  zoomButtons: {
+    left: 141,
+    top: 815
+  }
 } : { // default config
   lineHeight: 80
 };

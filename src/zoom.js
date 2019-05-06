@@ -27,11 +27,11 @@ export default class zoom {
     this.brush = null;
 
     if (config.hasZoomControl) {
-      const zoomInTop = config.vertical ? config.zoomButtonsTop : config.padding.top;
-      const zoomOutTop = config.vertical ? config.zoomButtonsTop : config.padding.top + dimensions.height - 26;
-      const zoomInLeft = config.vertical ? config.zoomButtonsLeft :
+      const zoomInTop = config.vertical ? config.zoomButtons.top : config.padding.top;
+      const zoomOutTop = config.vertical ? config.zoomButtons.top : config.padding.top + dimensions.height - 26;
+      const zoomInLeft = config.vertical ? config.zoomButtons.left :
         config.padding.left + config.labelWidth + dimensions.width + config.sliderWidth;
-      const zoomOutLeft = config.vertical ? config.zoomButtonsLeft + 30 :
+      const zoomOutLeft = config.vertical ? config.zoomButtons.left + 30 :
         config.padding.left + config.labelWidth + dimensions.width + config.sliderWidth;
       const zoomIn = container.append('button')
           .attr('type', 'button')
