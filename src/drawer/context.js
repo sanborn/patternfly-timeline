@@ -37,7 +37,7 @@ export default (svg, scales, dimensions, configuration, data) => {
     .attr("class", "timeline-pf-brush");
 
   if (configuration.vertical) {
-    const tx = -130; // correct values change with lineHeight, contextHeight and ??? #TODO calculate them correctly
+    const tx = -160; // correct values change with lineHeight, contextHeight and ??? #TODO calculate them correctly
     const ty = 135; //  these values assume lineHeight and contextHeight are both 40
     d3.select('.timeline-pf-labels').attr('transform', `rotate(-90) translate(${tx}, ${ty})`);
   }

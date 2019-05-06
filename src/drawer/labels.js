@@ -13,6 +13,7 @@ export default (container, scales, config) => data => {
     return count
   }
   const text = d => {
+    if (config.labelExcludeCounts) return d.name;
     const count = countEvents(d.data);
     if (d.name === undefined || d.name ===''){
       return `${count} Events`;
